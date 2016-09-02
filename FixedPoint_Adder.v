@@ -167,6 +167,21 @@ always @* begin
 			end
 				
 		end
+	//-----------------------------------------------------------------------//
+//overFlow
+// comparison of truncated bit and sign bit to check error in output and
+// generate overflow
+	
+	else	if(WIO < int_len) begin
+		
+				if ( tmp[`Max_len: WIO+frc_len-1] == ({(`trun_size){tmp[int_len+frc_len-1]}})) begin
+						overFlow = 1'b0;
+				end
+				else begin
+						overFlow = 1'b1;
+				end
+		end
+//------------------------------------------------------------------//
 		
 		else begin // (WIO<int_len)
 			
@@ -179,26 +194,9 @@ always @* begin
 		end
 	end
 
-//-----------------------------------------------------------------------//
-//overFlow
-// comparison of truncated bit and sign bit to check error in output and
-// generate overflow
-	
-	always @* begin
-		
-		if(WIO < int_len) begin
-		
-				if ( tmp[`Max_len: WIO+frc_len-1] == ({(`trun_size){tmp[int_len+frc_len-1]}})) begin
-						overFlow = 1'b0;
-				end
-				else begin
-						overFlow = 1'b1;
-				end
-		end
-	end
-//------------------------------------------------------------------//
-// Final Answer with truncation and adjustment
 
+
+// Final Answer with truncation and adjustment
 	always @* begin
 			FixedPoint_Add_Out <= {int_out,frc_out};
 		end
